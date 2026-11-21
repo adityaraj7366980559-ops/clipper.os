@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Settings, Shield, Server, Key, Database, Check, RefreshCw } from "lucide-react";
-import { fetchSystemMode } from "../../lib/api";
+import { fetchSystemMode, API_BASE } from "../../lib/api";
 
 export default function SettingsPage() {
   const [systemMode, setSystemMode] = useState<any>({ mode: "Loading..." });
@@ -22,7 +22,7 @@ export default function SettingsPage() {
       if (data.transcriber_provider) setTranscriberProvider(data.transcriber_provider);
     }).catch(() => {});
 
-    fetch("http://localhost:8000/api/v1/extras/cookies-config")
+    fetch(`${API_BASE}/extras/cookies-config`)
       .then((res) => res.json())
       .then((data) => {
         if (data.cookies_browser) setCookiesBrowser(data.cookies_browser);
@@ -145,7 +145,7 @@ export default function SettingsPage() {
                 value={cookiesBrowser}
                 onChange={(e) => {
                   setCookiesBrowser(e.target.value);
-                  fetch("http://localhost:8000/api/v1/extras/cookies-config?browser=" + e.target.value, { method: "POST" });
+                  fetch(`${API_BASE}/extras/cookies-config?browser=` + e.target.value, { method: "POST" });
                 }}
                 className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-xs text-white outline-none focus:border-sky-500"
               >
@@ -169,7 +169,7 @@ export default function SettingsPage() {
                   if (e.target.files && e.target.files[0]) {
                     const fd = new FormData();
                     fd.append("file", e.target.files[0]);
-                    const res = await fetch("http://localhost:8000/api/v1/extras/upload-cookies", {
+                    const res = await fetch(`${API_BASE}/extras/upload-cookies`, {
                       method: "POST",
                       body: fd,
                     });

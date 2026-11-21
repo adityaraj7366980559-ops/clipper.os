@@ -1,6 +1,40 @@
 import { Project, Clip, CaptionTemplate, BrandKit, SocialPost } from "../types";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+export const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1").replace(/\/$/, "");
+
+// Helper to get backend origin (e.g. "https://api.clipforge.app" from "https://api.clipforge.app/api/v1")
+export function getBackendBaseUrl(): string {
+  if (API_BASE) {
+    return API_BASE.replace(/\/api\/v1\/?$/, "");
+  }
+  return "";
+}
+
+// Helper to construct full URL for media / static proxy files
+export function getMediaUrl(path: string | undefined): string {
+  if (!path) return "";
+  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("blob:") || path.startsWith("data:")) {
+    return path;
+  }
+  const base = getBackendBaseUrl();
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  return base ? `${base}${cleanPath}` : cleanPath;
+}
+
+// Helper to get WebSocket URL for live progress
+export function getWebSocketProgressUrl(): string {
+  const base = getBackendBaseUrl();
+  if (base) {
+    const wsProto = base.startsWith("https") ? "wss:" : "ws:";
+    const host = base.replace(/^https?:\/\//, "");
+    return `${wsProto}//${host}/ws/progress`;
+  }
+  if (typeof window !== "undefined") {
+    const wsProto = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return `${wsProto}//${window.location.host}/ws/progress`;
+  }
+  return "ws://localhost:8000/ws/progress";
+}
 
 export async function fetchProjects(): Promise<Project[]> {
   const res = await fetch(`${API_BASE}/projects`, { cache: "no-store" });

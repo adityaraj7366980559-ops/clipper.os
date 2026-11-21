@@ -36,6 +36,7 @@ import {
   fetchMusicTracks,
   schedulePosts,
   getSubtitleDownloadUrl,
+  getMediaUrl,
 } from "../../../lib/api";
 import { Clip, CaptionTemplate, WordToken } from "../../../types";
 
@@ -196,8 +197,8 @@ export default function ClipEditorPage() {
   }
 
   const videoSrc = clip.preview_url
-    ? `http://localhost:8000${clip.preview_url}`
-    : `http://localhost:8000/static/proxies/${clip.project_id}_proxy.mp4`;
+    ? getMediaUrl(clip.preview_url)
+    : getMediaUrl(`/static/proxies/${clip.project_id}_proxy.mp4`);
 
   // Find currently spoken word
   const activeWord = clip.transcript_segments?.find(

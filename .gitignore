@@ -1,0 +1,113 @@
+# ==============================================================================
+# ClipForge / Clipper Root - Git Ignore Configuration
+# ==============================================================================
+
+# 1. Environment & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.crt
+client_secret*.json
+token*.json
+credentials.json
+cookies.txt
+
+# 2. Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 3. Node.js & Web Frontend
+node_modules/
+.next/
+out/
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# 4. Media & Video/Audio Processing Assets
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+*.flv
+*.wmv
+*.m4v
+*.mp3
+*.wav
+*.m4a
+*.aac
+*.ogg
+*.flac
+*.wma
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.bmp
+*.ass
+*.srt
+*.vtt
+
+# 5. Application Data & Local Storage
+data/
+uploads/
+downloads/
+proxies/
+exports/
+cache/
+temp/
+tmp/
+.cache/
+2026-11-19/
+*.db
+*.sqlite
+*.sqlite3
+
+# 6. Logs & Debug Traces
+*.log
+pipeline_errors.log
+
+# 7. OS & IDE Metadata
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo

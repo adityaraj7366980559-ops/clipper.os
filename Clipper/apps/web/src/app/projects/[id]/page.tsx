@@ -22,7 +22,7 @@ import {
   Filter,
   Check,
 } from "lucide-react";
-import { fetchProject, getSubtitleDownloadUrl, schedulePosts } from "../../../lib/api";
+import { fetchProject, getSubtitleDownloadUrl, schedulePosts, getWebSocketProgressUrl, getMediaUrl } from "../../../lib/api";
 import { Project, Clip } from "../../../types";
 
 export default function ProjectDetailsPage() {
@@ -41,7 +41,7 @@ export default function ProjectDetailsPage() {
     let ws: WebSocket | null = null;
     const connectWs = () => {
       try {
-        ws = new WebSocket("ws://localhost:8000/ws/progress");
+        ws = new WebSocket(getWebSocketProgressUrl());
         ws.onmessage = (event) => {
           try {
             const data = JSON.parse(event.data);
@@ -201,8 +201,7 @@ export default function ProjectDetailsPage() {
             </Link>
             <button
               onClick={() => {
-                fetch(`http://localhost:8000/api/v1/projects/${project.id}`)
-                  .then(r => r.json())
+                fetchProject(project.id)
                   .then(data => setProject(data));
               }}
               className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white hover:bg-rose-500"
@@ -294,8 +293,8 @@ export default function ProjectDetailsPage() {
             {clips.map((clip) => {
               const isPlaying = playingClipId === clip.id;
               const videoSrc = clip.preview_url
-                ? `http://localhost:8000${clip.preview_url}`
-                : "http://localhost:8000/static/proxies/" + clip.project_id + "_proxy.mp4";
+                ? getMediaUrl(clip.preview_url)
+                : getMediaUrl(`/static/proxies/${clip.project_id}_proxy.mp4`);
 
               const scoreColor =
                 clip.virality_score >= 85

@@ -58,7 +58,8 @@ class Settings(BaseSettings):
     YOUTUBE_CLIENT_SECRET: Optional[str] = os.getenv("YOUTUBE_CLIENT_SECRET")
     YOUTUBE_REDIRECT_URI: str = "http://localhost:3000/api/auth/callback/youtube"
     
-    # CORS
+    # CORS (can be a comma-separated string or '*' via CORS_ORIGINS env var)
+    CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "")
     BACKEND_CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
         "http://localhost:3001",
@@ -66,6 +67,15 @@ class Settings(BaseSettings):
         "http://localhost:8000",
         "http://127.0.0.1:8000"
     ]
+
+    @property
+    def cors_origins_list(self) -> List[str]:
+        if self.CORS_ORIGINS:
+            if self.CORS_ORIGINS.strip() == "*":
+                return ["*"]
+            custom = [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
+            return list(set(self.BACKEND_CORS_ORIGINS + custom))
+        return self.BACKEND_CORS_ORIGINS
 
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),
